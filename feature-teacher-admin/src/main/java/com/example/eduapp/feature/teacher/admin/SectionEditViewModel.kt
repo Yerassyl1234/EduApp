@@ -51,19 +51,28 @@ class SectionEditViewModel @Inject constructor(
     fun addComponent(title: String, description: String, composition: List<String>, function: String) {
         viewModelScope.launch {
             val component = Component(
+                id = "temp_${System.currentTimeMillis()}",
                 categoryId = sectionId,
                 title = title,
                 description = description,
                 composition = composition,
                 function = function
             )
-            categoriesRepository.addComponent(component)
+            // Optimistic: show immediately
+            _uiState.value = _uiState.value.copy(
+                components = _uiState.value.components + component
+            )
+            categoriesRepository.addComponent(component.copy(id = ""))
             loadSection()
         }
     }
 
     fun deleteComponent(componentId: String) {
         viewModelScope.launch {
+            // Optimistic: remove immediately
+            _uiState.value = _uiState.value.copy(
+                components = _uiState.value.components.filter { it.id != componentId }
+            )
             categoriesRepository.deleteComponent(componentId)
             loadSection()
         }
@@ -71,6 +80,12 @@ class SectionEditViewModel @Inject constructor(
 
     fun updateComponent(component: Component) {
         viewModelScope.launch {
+            // Optimistic: update immediately
+            _uiState.value = _uiState.value.copy(
+                components = _uiState.value.components.map {
+                    if (it.id == component.id) component else it
+                }
+            )
             categoriesRepository.updateComponent(component)
             loadSection()
         }
@@ -79,6 +94,10 @@ class SectionEditViewModel @Inject constructor(
     fun updateSectionTitle(newTitle: String) {
         viewModelScope.launch {
             val category = _uiState.value.category ?: return@launch
+            // Optimistic: update title immediately
+            _uiState.value = _uiState.value.copy(
+                category = category.copy(title = newTitle)
+            )
             categoriesRepository.updateCategory(category.copy(title = newTitle))
             loadSection()
         }

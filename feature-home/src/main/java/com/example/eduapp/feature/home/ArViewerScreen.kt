@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -13,6 +14,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -44,6 +47,12 @@ import io.github.sceneview.rememberOnGestureListener
 import io.github.sceneview.rememberView
 
 private const val TAG = "ArViewerScreen"
+
+private val ArGradientColors = listOf(
+    Color(0xFF26A69A),
+    Color(0xFF00897B),
+    Color(0xFF004D40)
+)
 
 @Composable
 fun ArViewerScreen(
@@ -79,29 +88,42 @@ fun ArViewerScreen(
     }
 
     if (!hasCameraPermission) {
-        Scaffold { padding ->
+        Scaffold(containerColor = Color(0xFFF0F4F3)) { padding ->
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding),
                 contentAlignment = Alignment.Center
             ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = "AR үшін камера рұқсаты қажет",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Button(onClick = {
-                        permissionLauncher.launch(Manifest.permission.CAMERA)
-                    }) {
-                        Text("Рұқсат беру")
-                    }
-                    Spacer(modifier = Modifier.height(8.dp))
-                    TextButton(onClick = onBackClick) {
-                        Text("Артқа")
+                Card(
+                    modifier = Modifier.padding(24.dp),
+                    shape = RoundedCornerShape(20.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.padding(24.dp)
+                    ) {
+                        Text(
+                            text = "AR үшін камера рұқсаты қажет",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center,
+                            color = Color(0xFF004D40)
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Button(
+                            onClick = { permissionLauncher.launch(Manifest.permission.CAMERA) },
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00897B)),
+                            shape = RoundedCornerShape(14.dp)
+                        ) {
+                            Text("Рұқсат беру")
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        TextButton(onClick = onBackClick) {
+                            Text("Артқа", color = Color(0xFF00897B))
+                        }
                     }
                 }
             }
@@ -110,23 +132,34 @@ fun ArViewerScreen(
     }
 
     if (actualModelFileName.isBlank()) {
-        Scaffold { padding ->
+        Scaffold(containerColor = Color(0xFFF0F4F3)) { padding ->
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding),
                 contentAlignment = Alignment.Center
             ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = "Бұл компонент үшін 3D модель жоқ",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    TextButton(onClick = onBackClick) {
-                        Text("Артқа")
+                Card(
+                    modifier = Modifier.padding(24.dp),
+                    shape = RoundedCornerShape(20.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.padding(24.dp)
+                    ) {
+                        Text(
+                            text = "Бұл компонент үшін 3D модель жоқ",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center,
+                            color = Color(0xFF004D40)
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        TextButton(onClick = onBackClick) {
+                            Text("Артқа", color = Color(0xFF00897B))
+                        }
                     }
                 }
             }
@@ -225,7 +258,13 @@ private fun ArSceneContent(
                     .padding(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                FilledTonalIconButton(onClick = onBackClick) {
+                FilledTonalIconButton(
+                    onClick = onBackClick,
+                    colors = IconButtonDefaults.filledTonalIconButtonColors(
+                        containerColor = Color(0xFF00897B),
+                        contentColor = Color.White
+                    )
+                ) {
                     Icon(
                         Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Артқа"
@@ -234,42 +273,59 @@ private fun ArSceneContent(
                 Spacer(modifier = Modifier.width(12.dp))
                 Surface(
                     shape = RoundedCornerShape(20.dp),
-                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f),
+                    color = Color.White.copy(alpha = 0.9f),
                     tonalElevation = 4.dp
                 ) {
                     Text(
                         text = "AR — $componentTitle",
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                         fontWeight = FontWeight.SemiBold,
-                        fontSize = 16.sp
+                        fontSize = 16.sp,
+                        color = Color(0xFF004D40)
                     )
                 }
             }
 
             Spacer(modifier = Modifier.weight(1f))
 
-            // Instructions
-            Surface(
+            // Bottom instruction + exit button
+            Column(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
-                    .padding(bottom = 32.dp),
-                shape = RoundedCornerShape(24.dp),
-                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f),
-                tonalElevation = 4.dp
+                    .padding(bottom = 24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = trackingFailureReason?.let {
-                        "📱 Камераны жазық бетке бағыттаңыз..."
-                    } ?: if (childNodes.isEmpty()) {
-                        "📱 Камераны жазық бетке бағыттаңыз..."
-                    } else {
-                        "👆 Тағы модель қосу үшін экранды басыңыз"
-                    },
-                    modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp),
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium,
-                    textAlign = TextAlign.Center
-                )
+                Surface(
+                    shape = RoundedCornerShape(24.dp),
+                    color = Color.White.copy(alpha = 0.9f),
+                    tonalElevation = 4.dp
+                ) {
+                    Text(
+                        text = trackingFailureReason?.let {
+                            "📱 Камераны жазық бетке бағыттаңыз..."
+                        } ?: if (childNodes.isEmpty()) {
+                            "📱 Камераны жазық бетке бағыттаңыз..."
+                        } else {
+                            "👆 Тағы модель қосу үшін экранды басыңыз"
+                        },
+                        modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp),
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium,
+                        textAlign = TextAlign.Center,
+                        color = Color(0xFF004D40)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Button(
+                    onClick = onBackClick,
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00897B)),
+                    shape = RoundedCornerShape(16.dp),
+                    contentPadding = PaddingValues(horizontal = 32.dp, vertical = 12.dp)
+                ) {
+                    Text("Шығу", fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
+                }
             }
         }
     }

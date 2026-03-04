@@ -4,5 +4,6 @@ data class Category(
     val id: String = "",
     val title: String = "",
     val imageUrl: String = "",
-    val order: Int = 0
+    val order: Int = 0,
+    val published: Boolean = false
 )

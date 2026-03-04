@@ -55,7 +55,8 @@ class CategoriesRepository @Inject constructor(
             val data = hashMapOf(
                 "title" to category.title,
                 "imageUrl" to category.imageUrl,
-                "order" to category.order
+                "order" to category.order,
+                "published" to category.published
             )
             val docRef = firestore.collection("categories").add(data).await()
             Result.success(docRef.id)
@@ -69,9 +70,20 @@ class CategoriesRepository @Inject constructor(
             val data = hashMapOf(
                 "title" to category.title,
                 "imageUrl" to category.imageUrl,
-                "order" to category.order
+                "order" to category.order,
+                "published" to category.published
             )
             firestore.collection("categories").document(category.id).set(data).await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun publishCategory(categoryId: String): Result<Unit> {
+        return try {
+            firestore.collection("categories").document(categoryId)
+                .update("published", true).await()
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)

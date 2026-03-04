@@ -45,8 +45,11 @@ class ProfileViewModel @Inject constructor(
         loadProfile()
     }
 
-    private fun loadProfile() {
+    private fun loadProfile(showLoading: Boolean = true) {
         viewModelScope.launch {
+            if (showLoading) {
+                _uiState.value = _uiState.value.copy(isLoading = true)
+            }
             val user = authRepository.getCurrentUser()
             val results = user?.let {
                 if (it.role == "teacher") {
@@ -173,5 +176,9 @@ class ProfileViewModel @Inject constructor(
 
     fun signOut() {
         authRepository.signOut()
+    }
+
+    fun refresh() {
+        loadProfile(showLoading = false)
     }
 }

@@ -67,15 +67,18 @@ class HomeViewModel @Inject constructor(
         loadData()
     }
 
-    private fun loadData() {
+    private fun loadData(showLoading: Boolean = true) {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true)
+            if (showLoading) {
+                _uiState.value = _uiState.value.copy(isLoading = true)
+            }
             val user = authRepository.getCurrentUser()
 
-            // Firebase-тен мұғалім қосқан курстарды жүктеу
-            val firebaseCourses = categoriesRepository.getCategories().getOrNull() ?: emptyList()
+            // Firebase-тен мұғалім қосқан курстарды жүктеу (тек жарияланғандарын)
+            val firebaseCourses = categoriesRepository.getCategories().getOrNull()
+                ?.filter { it.published } ?: emptyList()
 
-            // 5 тұрақты секция + Firebase-тен қосылған курстар (снизу)
+            // 5 тұрақты секция + жарияланған Firebase курстар (снизу)
             val allCategories = FIXED_CATEGORIES + firebaseCourses
 
             _uiState.value = HomeUiState(
@@ -87,7 +90,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun refresh() {
-        loadData()
+        loadData(showLoading = false)
     }
 }
 

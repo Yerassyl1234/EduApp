@@ -43,17 +43,26 @@ class CoursesViewModel @Inject constructor(
     fun addCategory(title: String) {
         viewModelScope.launch {
             val maxOrder = _uiState.value.categories.maxOfOrNull { it.order } ?: 0
-            val category = Category(
+            val tempCategory = Category(
+                id = "temp_${System.currentTimeMillis()}",
                 title = title,
                 order = maxOrder + 1
             )
-            categoriesRepository.addCategory(category)
+            // Optimistic: show immediately
+            _uiState.value = _uiState.value.copy(
+                categories = _uiState.value.categories + tempCategory
+            )
+            categoriesRepository.addCategory(tempCategory)
             loadCategories()
         }
     }
 
     fun deleteCategory(categoryId: String) {
         viewModelScope.launch {
+            // Optimistic: remove immediately
+            _uiState.value = _uiState.value.copy(
+                categories = _uiState.value.categories.filter { it.id != categoryId }
+            )
             categoriesRepository.deleteCategory(categoryId)
             loadCategories()
         }
@@ -62,7 +71,26 @@ class CoursesViewModel @Inject constructor(
     fun updateCategoryTitle(categoryId: String, newTitle: String) {
         viewModelScope.launch {
             val category = _uiState.value.categories.find { it.id == categoryId } ?: return@launch
+            // Optimistic: update title immediately
+            _uiState.value = _uiState.value.copy(
+                categories = _uiState.value.categories.map {
+                    if (it.id == categoryId) it.copy(title = newTitle) else it
+                }
+            )
             categoriesRepository.updateCategory(category.copy(title = newTitle))
+            loadCategories()
+        }
+    }
+
+    fun publishCategory(categoryId: String) {
+        viewModelScope.launch {
+            // Optimistic: mark as published immediately
+            _uiState.value = _uiState.value.copy(
+                categories = _uiState.value.categories.map {
+                    if (it.id == categoryId) it.copy(published = true) else it
+                }
+            )
+            categoriesRepository.publishCategory(categoryId)
             loadCategories()
         }
     }

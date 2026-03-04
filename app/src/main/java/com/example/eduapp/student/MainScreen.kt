@@ -9,7 +9,11 @@ import androidx.compose.material.icons.filled.Quiz
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -53,7 +57,7 @@ fun MainScreen(
     val navController = rememberNavController()
 
     val bottomItems = buildList {
-        add(BottomNavItem(HOME_ROUTE, "Басты бет", Icons.Default.Home))
+        add(BottomNavItem(HOME_ROUTE, "Басты", Icons.Default.Home))
         add(BottomNavItem(TEST_LIST_ROUTE, "Тест", Icons.Default.Quiz))
         if (isTeacher) {
             add(BottomNavItem(ADMIN_ROUTE, "Админ", Icons.Default.AdminPanelSettings))
@@ -63,15 +67,30 @@ fun MainScreen(
 
     Scaffold(
         bottomBar = {
-            NavigationBar {
+            NavigationBar(
+                containerColor = Color.White,
+                tonalElevation = 8.dp
+            ) {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentDestination = navBackStackEntry?.destination
 
                 bottomItems.forEach { item ->
+                    val isSelected = currentDestination?.hierarchy?.any { it.route == item.route } == true
                     NavigationBarItem(
-                        icon = { Icon(item.icon, contentDescription = item.label) },
-                        label = { Text(item.label) },
-                        selected = currentDestination?.hierarchy?.any { it.route == item.route } == true,
+                        icon = {
+                            Icon(
+                                item.icon,
+                                contentDescription = item.label
+                            )
+                        },
+                        label = {
+                            Text(
+                                item.label,
+                                fontSize = 11.sp,
+                                fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal
+                            )
+                        },
+                        selected = isSelected,
                         onClick = {
                             navController.navigate(item.route) {
                                 popUpTo(navController.graph.findStartDestination().id) {
@@ -80,7 +99,14 @@ fun MainScreen(
                                 launchSingleTop = true
                                 restoreState = true
                             }
-                        }
+                        },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = Color(0xFF00897B),
+                            selectedTextColor = Color(0xFF00897B),
+                            indicatorColor = Color(0xFF00897B).copy(alpha = 0.12f),
+                            unselectedIconColor = Color(0xFF9E9E9E),
+                            unselectedTextColor = Color(0xFF9E9E9E)
+                        )
                     )
                 }
             }

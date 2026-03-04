@@ -1,5 +1,6 @@
 package com.example.eduapp.feature.home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,12 +13,20 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+
+private val GradientColors = listOf(
+    Color(0xFF26A69A),
+    Color(0xFF00897B),
+    Color(0xFF004D40)
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,32 +38,61 @@ fun ComponentDetailScreen(
     val component by viewModel.component.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(component?.title ?: "") },
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Артқа")
-                    }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFF0F4F3))
+    ) {
+        // === GRADIENT HEADER — только тайтл, без описания ===
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    Brush.verticalGradient(GradientColors),
+                    shape = RoundedCornerShape(bottomStart = 28.dp, bottomEnd = 28.dp)
+                )
+                .clip(RoundedCornerShape(bottomStart = 28.dp, bottomEnd = 28.dp))
+                .statusBarsPadding()
+                .padding(top = 8.dp, bottom = 20.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(onClick = onBackClick) {
+                    Icon(
+                        Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Артқа",
+                        tint = Color.White
+                    )
                 }
-            )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = component?.title ?: "",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    maxLines = 2
+                )
+            }
         }
-    ) { padding ->
+
         if (isLoading) {
             Box(
-                modifier = Modifier.fillMaxSize().padding(padding),
+                modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
-            ) { CircularProgressIndicator() }
-            return@Scaffold
+            ) { CircularProgressIndicator(color = Color(0xFF00897B)) }
+            return
         }
 
-        val comp = component ?: return@Scaffold
+        val comp = component ?: return
 
+        // === Scrollable content — всё последовательно ===
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp)
         ) {
@@ -71,13 +109,95 @@ fun ComponentDetailScreen(
                 Spacer(modifier = Modifier.height(16.dp))
             }
 
-            // === AR КНОПКА ===
+            // === Ақпарат ===
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.White),
+                elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        text = "Ақпарат",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF004D40)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(text = comp.description, fontSize = 15.sp, lineHeight = 22.sp)
+                }
+            }
+
+            // === Құрамы ===
+            if (comp.composition.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(12.dp))
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text(
+                            text = "Құрамы:",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color(0xFF004D40)
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        comp.composition.forEach { item ->
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 6.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Surface(
+                                    modifier = Modifier.size(8.dp),
+                                    shape = RoundedCornerShape(4.dp),
+                                    color = Color(0xFF00897B)
+                                ) {}
+                                Spacer(modifier = Modifier.width(12.dp))
+                                Text(text = item, fontSize = 15.sp)
+                            }
+                        }
+                    }
+                }
+            }
+
+            // === Қызметі ===
+            if (comp.function.isNotBlank()) {
+                Spacer(modifier = Modifier.height(12.dp))
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text(
+                            text = "Қызметі:",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color(0xFF004D40)
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(text = comp.function, fontSize = 15.sp, lineHeight = 22.sp)
+                    }
+                }
+            }
+
+            // === AR КНОПКА — после всех секций, внутри scroll ===
+            Spacer(modifier = Modifier.height(16.dp))
+
             Button(
                 onClick = { onArClick(comp.id, comp.title, comp.modelFileName) },
-                modifier = Modifier.fillMaxWidth().height(50.dp),
-                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(52.dp),
+                shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.tertiary
+                    containerColor = Color(0xFF00897B)
                 )
             ) {
                 Icon(Icons.Default.ViewInAr, contentDescription = null, modifier = Modifier.size(24.dp))
@@ -85,27 +205,7 @@ fun ComponentDetailScreen(
                 Text("AR көру", fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(text = "Ақпарат", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = comp.description, fontSize = 15.sp)
-
-            if (comp.composition.isNotEmpty()) {
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(text = "Құрамы:", fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
-                Spacer(modifier = Modifier.height(8.dp))
-                comp.composition.forEach { item ->
-                    Text(text = "• $item", fontSize = 15.sp, modifier = Modifier.padding(start = 8.dp, bottom = 4.dp))
-                }
-            }
-
-            if (comp.function.isNotBlank()) {
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(text = "Қызметі:", fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(text = comp.function, fontSize = 15.sp)
-            }
+            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }

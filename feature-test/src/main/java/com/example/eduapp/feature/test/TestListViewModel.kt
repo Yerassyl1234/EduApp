@@ -28,9 +28,11 @@ class TestListViewModel @Inject constructor(
         loadTests()
     }
 
-    private fun loadTests() {
+    private fun loadTests(showLoading: Boolean = true) {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true)
+            if (showLoading) {
+                _uiState.value = _uiState.value.copy(isLoading = true)
+            }
             testsRepository.getTests().onSuccess { tests ->
                 _uiState.value = TestListUiState(isLoading = false, tests = tests)
             }.onFailure { e ->
@@ -39,5 +41,5 @@ class TestListViewModel @Inject constructor(
         }
     }
 
-    fun refresh() { loadTests() }
+    fun refresh() { loadTests(showLoading = false) }
 }

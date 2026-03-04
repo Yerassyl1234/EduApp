@@ -17,11 +17,21 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
+
+        // Только arm64 — уменьшает APK (убирает x86, armeabi-v7a .so)
+        ndk {
+            abiFilters += listOf("arm64-v8a")
+        }
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 
@@ -36,6 +46,12 @@ android {
 
     buildFeatures {
         compose = true
+    }
+
+    packaging {
+        jniLibs {
+            useLegacyPackaging = true
+        }
     }
 }
 
@@ -85,4 +101,6 @@ dependencies {
     // Core
     implementation(libs.core.ktx)
     implementation(libs.activity.compose)
+
+    implementation("androidx.core:core-splashscreen:1.0.0")
 }

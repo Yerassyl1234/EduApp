@@ -1,5 +1,6 @@
 package com.example.eduapp.feature.teacher.admin
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -11,10 +12,19 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+
+private val GradientColors = listOf(
+    Color(0xFF26A69A),
+    Color(0xFF00897B),
+    Color(0xFF004D40)
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,169 +39,175 @@ fun SectionEditScreen(
     var showEditTitleDialog by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(uiState.category?.title ?: "Секция") },
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Артқа")
-                    }
-                },
-                actions = {
-                    IconButton(onClick = { showEditTitleDialog = true }) {
-                        Icon(Icons.Default.Edit, contentDescription = "Атауын өңдеу")
-                    }
-                }
-            )
-        },
+        containerColor = Color(0xFFF0F4F3),
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { showAddComponentDialog = true },
-                containerColor = MaterialTheme.colorScheme.primary
+                containerColor = Color(0xFF00897B),
+                contentColor = Color.White,
+                shape = RoundedCornerShape(16.dp)
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Подкатегория қосу")
             }
         }
     ) { padding ->
-        if (uiState.isLoading) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+        ) {
+            // === GRADIENT HEADER ===
             Box(
-                modifier = Modifier.fillMaxSize().padding(padding),
-                contentAlignment = Alignment.Center
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        Brush.verticalGradient(GradientColors),
+                        shape = RoundedCornerShape(bottomStart = 28.dp, bottomEnd = 28.dp)
+                    )
+                    .clip(RoundedCornerShape(bottomStart = 28.dp, bottomEnd = 28.dp))
+                    .statusBarsPadding()
+                    .padding(top = 8.dp, bottom = 20.dp)
             ) {
-                CircularProgressIndicator()
-            }
-            return@Scaffold
-        }
-
-        if (uiState.components.isEmpty()) {
-            Box(
-                modifier = Modifier.fillMaxSize().padding(padding),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(
-                        Icons.Default.Description,
-                        contentDescription = null,
-                        modifier = Modifier.size(64.dp),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(onClick = onBackClick) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Артқа", tint = Color.White)
+                    }
+                    Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        "Подкатегориялар әлі жоқ",
-                        fontSize = 18.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        text = uiState.category?.title ?: "Секция",
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                        modifier = Modifier.weight(1f)
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        "Жаңа подкатегория қосу үшін + батырмасын басыңыз",
-                        fontSize = 14.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                    IconButton(onClick = { showEditTitleDialog = true }) {
+                        Icon(Icons.Default.Edit, contentDescription = "Атауын өңдеу", tint = Color.White)
+                    }
                 }
             }
-            return@Scaffold
-        }
 
-        LazyColumn(
-            modifier = Modifier.fillMaxSize().padding(padding),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(uiState.components) { component ->
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
+            if (uiState.isLoading) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(color = Color(0xFF00897B))
+                }
+                return@Scaffold
+            }
+
+            if (uiState.components.isEmpty()) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Surface(
+                            modifier = Modifier.size(64.dp),
+                            shape = RoundedCornerShape(16.dp),
+                            color = Color(0xFF00897B).copy(alpha = 0.12f)
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Icon(Icons.Default.Description, contentDescription = null, modifier = Modifier.size(32.dp), tint = Color(0xFF00897B))
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text("Подкатегориялар әлі жоқ", fontSize = 18.sp, color = Color(0xFF6B7B78), fontWeight = FontWeight.Medium)
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text("Жаңа подкатегория қосу үшін + батырмасын басыңыз", fontSize = 14.sp, color = Color(0xFF6B7B78))
+                    }
+                }
+                return@Scaffold
+            }
+
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                items(uiState.components, key = { it.id }) { component ->
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(16.dp),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                        colors = CardDefaults.cardColors(containerColor = Color.White)
                     ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                Icons.Default.Article,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                            Spacer(modifier = Modifier.width(12.dp))
-                            Text(
-                                text = component.title,
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                modifier = Modifier.weight(1f)
-                            )
-                            IconButton(onClick = { showEditComponentDialog = component }) {
-                                Icon(
-                                    Icons.Default.Edit,
-                                    contentDescription = "Өңдеу",
-                                    tint = MaterialTheme.colorScheme.primary,
-                                    modifier = Modifier.size(20.dp)
-                                )
-                            }
-                            IconButton(onClick = { showDeleteComponentDialog = component.id }) {
-                                Icon(
-                                    Icons.Default.Delete,
-                                    contentDescription = "Жою",
-                                    tint = MaterialTheme.colorScheme.error,
-                                    modifier = Modifier.size(20.dp)
-                                )
-                            }
-                        }
-
-                        if (component.description.isNotBlank()) {
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = component.description,
-                                fontSize = 14.sp,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                maxLines = 3
-                            )
-                        }
-
-                        if (component.composition.isNotEmpty()) {
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = "Құрамы:",
-                                fontSize = 13.sp,
-                                fontWeight = FontWeight.Medium,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                            component.composition.forEach { item ->
+                        Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Surface(
+                                    modifier = Modifier.size(38.dp),
+                                    shape = RoundedCornerShape(10.dp),
+                                    color = Color(0xFF00897B).copy(alpha = 0.12f)
+                                ) {
+                                    Box(contentAlignment = Alignment.Center) {
+                                        Icon(Icons.Default.Article, contentDescription = null, tint = Color(0xFF00897B), modifier = Modifier.size(20.dp))
+                                    }
+                                }
+                                Spacer(modifier = Modifier.width(12.dp))
                                 Text(
-                                    text = "• $item",
-                                    fontSize = 13.sp,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    modifier = Modifier.padding(start = 8.dp)
+                                    text = component.title,
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    modifier = Modifier.weight(1f),
+                                    color = Color(0xFF1C1B1F)
+                                )
+                                IconButton(onClick = { showEditComponentDialog = component }) {
+                                    Icon(Icons.Default.Edit, contentDescription = "Өңдеу", tint = Color(0xFF00897B), modifier = Modifier.size(20.dp))
+                                }
+                                IconButton(onClick = { showDeleteComponentDialog = component.id }) {
+                                    Icon(Icons.Default.Delete, contentDescription = "Жою", tint = Color(0xFFBA1A1A), modifier = Modifier.size(20.dp))
+                                }
+                            }
+
+                            if (component.description.isNotBlank()) {
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = component.description,
+                                    fontSize = 14.sp,
+                                    color = Color(0xFF6B7B78),
+                                    maxLines = 3
                                 )
                             }
-                        }
 
-                        if (component.function.isNotBlank()) {
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = "Қызметі: ${component.function}",
-                                fontSize = 13.sp,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
+                            if (component.composition.isNotEmpty()) {
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = "Құрамы:",
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    color = Color(0xFF00897B)
+                                )
+                                component.composition.forEach { item ->
+                                    Text(
+                                        text = "• $item",
+                                        fontSize = 13.sp,
+                                        color = Color(0xFF6B7B78),
+                                        modifier = Modifier.padding(start = 8.dp)
+                                    )
+                                }
+                            }
 
-                        // === AR көру батырмасы (placeholder) ===
-                        Spacer(modifier = Modifier.height(10.dp))
-                        Button(
-                            onClick = { /* AR функционалы әлі іске асырылмаған */ },
-                            modifier = Modifier.fillMaxWidth().height(40.dp),
-                            shape = RoundedCornerShape(12.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.tertiary
-                            )
-                        ) {
-                            Icon(Icons.Default.ViewInAr, contentDescription = null, modifier = Modifier.size(20.dp))
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text("AR көру", fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                            if (component.function.isNotBlank()) {
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = "Қызметі: ${component.function}",
+                                    fontSize = 13.sp,
+                                    color = Color(0xFF6B7B78)
+                                )
+                            }
+
+                            // === AR көру батырмасы ===
+                            Spacer(modifier = Modifier.height(10.dp))
+                            Button(
+                                onClick = { /* AR функционалы әлі іске асырылмаған */ },
+                                modifier = Modifier.fillMaxWidth().height(42.dp),
+                                shape = RoundedCornerShape(12.dp),
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF26A69A))
+                            ) {
+                                Icon(Icons.Default.ViewInAr, contentDescription = null, modifier = Modifier.size(20.dp))
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text("AR көру", fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                            }
                         }
                     }
                 }
@@ -215,7 +231,8 @@ fun SectionEditScreen(
     showDeleteComponentDialog?.let { componentId ->
         AlertDialog(
             onDismissRequest = { showDeleteComponentDialog = null },
-            title = { Text("Подкатегорияны жою") },
+            containerColor = Color.White,
+            title = { Text("Подкатегорияны жою", color = Color(0xFF004D40)) },
             text = { Text("Бұл подкатегорияны жойғыңыз келе ме?") },
             confirmButton = {
                 TextButton(
@@ -223,10 +240,10 @@ fun SectionEditScreen(
                         viewModel.deleteComponent(componentId)
                         showDeleteComponentDialog = null
                     }
-                ) { Text("Жою", color = MaterialTheme.colorScheme.error) }
+                ) { Text("Жою", color = Color(0xFFBA1A1A)) }
             },
             dismissButton = {
-                TextButton(onClick = { showDeleteComponentDialog = null }) { Text("Бас тарту") }
+                TextButton(onClick = { showDeleteComponentDialog = null }) { Text("Бас тарту", color = Color(0xFF6B7B78)) }
             }
         )
     }
@@ -259,14 +276,21 @@ fun SectionEditScreen(
         var editedTitle by remember { mutableStateOf(uiState.category?.title ?: "") }
         AlertDialog(
             onDismissRequest = { showEditTitleDialog = false },
-            title = { Text("Секция атауын өңдеу") },
+            containerColor = Color.White,
+            title = { Text("Секция атауын өңдеу", color = Color(0xFF004D40)) },
             text = {
                 OutlinedTextField(
                     value = editedTitle,
                     onValueChange = { editedTitle = it },
                     label = { Text("Жаңа атау") },
                     modifier = Modifier.fillMaxWidth(),
-                    singleLine = true
+                    singleLine = true,
+                    shape = RoundedCornerShape(14.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color(0xFF00897B),
+                        cursorColor = Color(0xFF00897B),
+                        focusedLabelColor = Color(0xFF00897B)
+                    )
                 )
             },
             confirmButton = {
@@ -277,10 +301,10 @@ fun SectionEditScreen(
                             showEditTitleDialog = false
                         }
                     }
-                ) { Text("Сақтау") }
+                ) { Text("Сақтау", color = Color(0xFF00897B), fontWeight = FontWeight.SemiBold) }
             },
             dismissButton = {
-                TextButton(onClick = { showEditTitleDialog = false }) { Text("Бас тарту") }
+                TextButton(onClick = { showEditTitleDialog = false }) { Text("Бас тарту", color = Color(0xFF6B7B78)) }
             }
         )
     }
@@ -303,7 +327,8 @@ fun ComponentEditDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(title) },
+        containerColor = Color.White,
+        title = { Text(title, color = Color(0xFF004D40)) },
         text = {
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -315,7 +340,13 @@ fun ComponentEditDialog(
                         onValueChange = { compTitle = it },
                         label = { Text("Атауы") },
                         modifier = Modifier.fillMaxWidth(),
-                        singleLine = true
+                        singleLine = true,
+                        shape = RoundedCornerShape(14.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = Color(0xFF00897B),
+                            cursorColor = Color(0xFF00897B),
+                            focusedLabelColor = Color(0xFF00897B)
+                        )
                     )
                 }
                 item {
@@ -325,7 +356,13 @@ fun ComponentEditDialog(
                         label = { Text("Сипаттамасы") },
                         modifier = Modifier.fillMaxWidth(),
                         minLines = 2,
-                        maxLines = 5
+                        maxLines = 5,
+                        shape = RoundedCornerShape(14.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = Color(0xFF00897B),
+                            cursorColor = Color(0xFF00897B),
+                            focusedLabelColor = Color(0xFF00897B)
+                        )
                     )
                 }
                 item {
@@ -335,7 +372,13 @@ fun ComponentEditDialog(
                         label = { Text("Құрамы (әр жол = 1 элемент)") },
                         modifier = Modifier.fillMaxWidth(),
                         minLines = 2,
-                        maxLines = 5
+                        maxLines = 5,
+                        shape = RoundedCornerShape(14.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = Color(0xFF00897B),
+                            cursorColor = Color(0xFF00897B),
+                            focusedLabelColor = Color(0xFF00897B)
+                        )
                     )
                 }
                 item {
@@ -345,7 +388,13 @@ fun ComponentEditDialog(
                         label = { Text("Қызметі") },
                         modifier = Modifier.fillMaxWidth(),
                         minLines = 2,
-                        maxLines = 4
+                        maxLines = 4,
+                        shape = RoundedCornerShape(14.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = Color(0xFF00897B),
+                            cursorColor = Color(0xFF00897B),
+                            focusedLabelColor = Color(0xFF00897B)
+                        )
                     )
                 }
             }
@@ -361,10 +410,10 @@ fun ComponentEditDialog(
                         onConfirm(compTitle.trim(), compDescription.trim(), compositionList, compFunction.trim())
                     }
                 }
-            ) { Text("Сақтау") }
+            ) { Text("Сақтау", color = Color(0xFF00897B), fontWeight = FontWeight.SemiBold) }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Бас тарту") }
+            TextButton(onClick = onDismiss) { Text("Бас тарту", color = Color(0xFF6B7B78)) }
         }
     )
 }

@@ -4,17 +4,39 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.eduapp.core.data.repository.AuthRepository
 import com.example.eduapp.feature.auth.AUTH_ROUTE
 import com.example.eduapp.feature.auth.authScreen
 import com.example.eduapp.feature.home.navigation.*
 import com.example.eduapp.feature.test.navigation.*
 import com.example.eduapp.feature.teacher.admin.navigation.*
 
+const val SPLASH_ROUTE = "splash"
+
 @Composable
-fun AppNavHost() {
+fun AppNavHost(authRepository: AuthRepository) {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = AUTH_ROUTE) {
+    NavHost(navController = navController, startDestination = SPLASH_ROUTE) {
+
+        // === SPLASH SCREEN ===
+        composable(SPLASH_ROUTE) {
+            SplashScreen(
+                authRepository = authRepository,
+                onNavigateToMain = {
+                    navController.navigate("main") {
+                        popUpTo(SPLASH_ROUTE) { inclusive = true }
+                    }
+                },
+                onNavigateToAuth = {
+                    navController.navigate(AUTH_ROUTE) {
+                        popUpTo(SPLASH_ROUTE) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        // === AUTH ===
         authScreen(
             onAuthSuccess = {
                 navController.navigate("main") {
@@ -23,6 +45,7 @@ fun AppNavHost() {
             }
         )
 
+        // === MAIN ===
         composable("main") {
             MainScreen(
                 onSignOut = {

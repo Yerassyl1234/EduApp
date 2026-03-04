@@ -32,9 +32,11 @@ class AdminViewModel @Inject constructor(
         loadData()
     }
 
-    fun loadData() {
+    fun loadData(showLoading: Boolean = true) {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true)
+            if (showLoading) {
+                _uiState.value = _uiState.value.copy(isLoading = true)
+            }
             val tests = testsRepository.getTests().getOrNull() ?: emptyList()
             val results = resultsRepository.getAllResults().getOrNull() ?: emptyList()
             _uiState.value = AdminUiState(
@@ -43,6 +45,10 @@ class AdminViewModel @Inject constructor(
                 allResults = results
             )
         }
+    }
+
+    fun refresh() {
+        loadData(showLoading = false)
     }
 
     fun publishResult(resultId: String) {
@@ -54,6 +60,10 @@ class AdminViewModel @Inject constructor(
 
     fun deleteTest(testId: String) {
         viewModelScope.launch {
+            // Optimistic: remove immediately
+            _uiState.value = _uiState.value.copy(
+                tests = _uiState.value.tests.filter { it.id != testId }
+            )
             testsRepository.deleteTest(testId)
             loadData()
         }
