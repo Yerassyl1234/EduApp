@@ -48,12 +48,13 @@ class SectionEditViewModel @Inject constructor(
         }
     }
 
-    fun addComponent(title: String, description: String, composition: List<String>, function: String) {
+    fun addComponent(title: String, imageUrl: String, description: String, composition: List<String>, function: String) {
         viewModelScope.launch {
             val component = Component(
                 id = "temp_${System.currentTimeMillis()}",
                 categoryId = sectionId,
                 title = title,
+                imageUrl = imageUrl,
                 description = description,
                 composition = composition,
                 function = function

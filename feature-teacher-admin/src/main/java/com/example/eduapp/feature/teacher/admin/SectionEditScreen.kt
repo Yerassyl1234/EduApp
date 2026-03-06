@@ -220,8 +220,8 @@ fun SectionEditScreen(
         ComponentEditDialog(
             title = "Жаңа подкатегория қосу",
             onDismiss = { showAddComponentDialog = false },
-            onConfirm = { title, description, composition, function ->
-                viewModel.addComponent(title, description, composition, function)
+            onConfirm = { title, imageUrl, description, composition, function ->
+                viewModel.addComponent(title, imageUrl, description, composition, function)
                 showAddComponentDialog = false
             }
         )
@@ -253,14 +253,16 @@ fun SectionEditScreen(
         ComponentEditDialog(
             title = "Подкатегорияны өңдеу",
             initialTitle = component.title,
+            initialImageUrl = component.imageUrl,
             initialDescription = component.description,
             initialComposition = component.composition,
             initialFunction = component.function,
             onDismiss = { showEditComponentDialog = null },
-            onConfirm = { title, description, composition, function ->
+            onConfirm = { title, imageUrl, description, composition, function ->
                 viewModel.updateComponent(
                     component.copy(
                         title = title,
+                        imageUrl = imageUrl,
                         description = description,
                         composition = composition,
                         function = function
@@ -314,13 +316,15 @@ fun SectionEditScreen(
 fun ComponentEditDialog(
     title: String,
     initialTitle: String = "",
+    initialImageUrl: String = "",
     initialDescription: String = "",
     initialComposition: List<String> = emptyList(),
     initialFunction: String = "",
     onDismiss: () -> Unit,
-    onConfirm: (title: String, description: String, composition: List<String>, function: String) -> Unit
+    onConfirm: (title: String, imageUrl: String, description: String, composition: List<String>, function: String) -> Unit
 ) {
     var compTitle by remember { mutableStateOf(initialTitle) }
+    var compImageUrl by remember { mutableStateOf(initialImageUrl) }
     var compDescription by remember { mutableStateOf(initialDescription) }
     var compComposition by remember { mutableStateOf(initialComposition.joinToString("\n")) }
     var compFunction by remember { mutableStateOf(initialFunction) }
@@ -339,6 +343,21 @@ fun ComponentEditDialog(
                         value = compTitle,
                         onValueChange = { compTitle = it },
                         label = { Text("Атауы") },
+                        modifier = Modifier.fillMaxWidth(),
+                        singleLine = true,
+                        shape = RoundedCornerShape(14.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = Color(0xFF00897B),
+                            cursorColor = Color(0xFF00897B),
+                            focusedLabelColor = Color(0xFF00897B)
+                        )
+                    )
+                }
+                item {
+                    OutlinedTextField(
+                        value = compImageUrl,
+                        onValueChange = { compImageUrl = it },
+                        label = { Text("Сурет сілтемесі (URL)") },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
                         shape = RoundedCornerShape(14.dp),
@@ -407,7 +426,7 @@ fun ComponentEditDialog(
                             .split("\n")
                             .map { it.trim() }
                             .filter { it.isNotBlank() }
-                        onConfirm(compTitle.trim(), compDescription.trim(), compositionList, compFunction.trim())
+                        onConfirm(compTitle.trim(), compImageUrl.trim(), compDescription.trim(), compositionList, compFunction.trim())
                     }
                 }
             ) { Text("Сақтау", color = Color(0xFF00897B), fontWeight = FontWeight.SemiBold) }

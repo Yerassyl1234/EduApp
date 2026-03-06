@@ -124,7 +124,68 @@ fun ComponentListItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Icon badge
-            if (component.imageUrl.isNotBlank()) {
+            val titleLower = component.title.lowercase()
+            val titleUpper=component.title.uppercase()
+            if (titleLower.contains("ram") || titleLower.contains("жады") || titleLower.contains("память")) {
+                androidx.compose.foundation.Image(
+                    painter = androidx.compose.ui.res.painterResource(id = R.drawable.ram),
+                    contentDescription = component.title,
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            } else if (titleLower.contains("жүйелік") || titleLower.contains("систем") || titleLower.contains("system")) {
+                androidx.compose.foundation.Image(
+                    painter = androidx.compose.ui.res.painterResource(id = R.drawable.system_block),
+                    contentDescription = component.title,
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }else if (titleUpper.contains("Процессор") || titleUpper.contains("CPU") || titleLower.contains("system")) {
+                androidx.compose.foundation.Image(
+                    painter = androidx.compose.ui.res.painterResource(id = R.drawable.processor),
+                    contentDescription = component.title,
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
+            else if (titleLower.contains("Аналық") || titleLower.contains("плата") || titleLower.contains("system")) {
+                androidx.compose.foundation.Image(
+                    painter = androidx.compose.ui.res.painterResource(id = R.drawable.motherboard),
+                    contentDescription = component.title,
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
+            else if (titleLower.contains("Салқындату") || titleLower.contains("жүйесі") || titleLower.contains("system")) {
+                androidx.compose.foundation.Image(
+                    painter = androidx.compose.ui.res.painterResource(id = R.drawable.cooler),
+                    contentDescription = component.title,
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
+            else if (titleLower.contains("Қуат") || titleLower.contains("көзі") || titleLower.contains("system")) {
+                androidx.compose.foundation.Image(
+                    painter = androidx.compose.ui.res.painterResource(id = R.drawable.power_block),
+                    contentDescription = component.title,
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
+
+            else if (component.imageUrl.isNotBlank()) {
                 AsyncImage(
                     model = component.imageUrl,
                     contentDescription = component.title,

@@ -125,20 +125,7 @@ fun ProfileScreen(
                             )
                         }
                     }
-                    Surface(
-                        modifier = Modifier
-                            .size(28.dp)
-                            .align(Alignment.BottomEnd),
-                        shape = CircleShape,
-                        color = Color.White
-                    ) {
-                        Icon(
-                            Icons.Default.CameraAlt,
-                            contentDescription = "Фото өзгерту",
-                            modifier = Modifier.padding(4.dp),
-                            tint = Color(0xFF00897B)
-                        )
-                    }
+
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
