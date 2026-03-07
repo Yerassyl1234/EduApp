@@ -142,7 +142,7 @@ fun ComponentListItem(
                         .clip(RoundedCornerShape(12.dp)),
                     contentScale = ContentScale.Crop
                 )
-            }else if (titleUpper.contains("Процессор") || titleUpper.contains("CPU") || titleLower.contains("system")) {
+            }else if (titleUpper.contains("ПРОЦЕССОР") || titleUpper.contains("CPU") || titleLower.contains("процессор")) {
                 androidx.compose.foundation.Image(
                     painter = androidx.compose.ui.res.painterResource(id = R.drawable.processor),
                     contentDescription = component.title,
@@ -152,7 +152,7 @@ fun ComponentListItem(
                     contentScale = ContentScale.Crop
                 )
             }
-            else if (titleLower.contains("Аналық") || titleLower.contains("плата") || titleLower.contains("system")) {
+            else if (titleLower.contains("аналық") || titleLower.contains("плата") || titleLower.contains("motherboard")) {
                 androidx.compose.foundation.Image(
                     painter = androidx.compose.ui.res.painterResource(id = R.drawable.motherboard),
                     contentDescription = component.title,
@@ -162,7 +162,7 @@ fun ComponentListItem(
                     contentScale = ContentScale.Crop
                 )
             }
-            else if (titleLower.contains("Салқындату") || titleLower.contains("жүйесі") || titleLower.contains("system")) {
+            else if (titleLower.contains("салқындату") || titleLower.contains("жүйесі") || titleLower.contains("cooler")) {
                 androidx.compose.foundation.Image(
                     painter = androidx.compose.ui.res.painterResource(id = R.drawable.cooler),
                     contentDescription = component.title,
@@ -238,6 +238,14 @@ fun ComponentListItem(
                     contentScale = ContentScale.Crop
                 )
             }
+            else if (titleLower.contains("проектор") || titleLower.contains("projector")) {
+                androidx.compose.foundation.Image(
+                    painter = androidx.compose.ui.res.painterResource(id = R.drawable.plotter),
+                    contentDescription = component.title,
+                    modifier = Modifier.size(48.dp).clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
             else if (titleLower.contains("енгізу") || titleLower.contains("input")) {
                 androidx.compose.foundation.Image(
                     painter = androidx.compose.ui.res.painterResource(id = R.drawable.input),
@@ -249,6 +257,54 @@ fun ComponentListItem(
             else if (titleLower.contains("шығару") || titleLower.contains("output")) {
                 androidx.compose.foundation.Image(
                     painter = androidx.compose.ui.res.painterResource(id = R.drawable.output),
+                    contentDescription = component.title,
+                    modifier = Modifier.size(48.dp).clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
+            else if (titleLower.contains("өңдеу") || titleLower.contains("processing")) {
+                androidx.compose.foundation.Image(
+                    painter = androidx.compose.ui.res.painterResource(id = R.drawable.process),
+                    contentDescription = component.title,
+                    modifier = Modifier.size(48.dp).clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
+            else if (titleLower.contains("сақтау") || titleLower.contains("storage")) {
+                androidx.compose.foundation.Image(
+                    painter = androidx.compose.ui.res.painterResource(id = R.drawable.save),
+                    contentDescription = component.title,
+                    modifier = Modifier.size(48.dp).clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
+            else if (titleLower.contains("бұлт") || titleLower.contains("cloud")) {
+                androidx.compose.foundation.Image(
+                    painter = androidx.compose.ui.res.painterResource(id = R.drawable.cloud),
+                    contentDescription = component.title,
+                    modifier = Modifier.size(48.dp).clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
+            else if (titleLower.contains("интеллект") || titleLower.contains("ai")) {
+                androidx.compose.foundation.Image(
+                    painter = androidx.compose.ui.res.painterResource(id = R.drawable.ai),
+                    contentDescription = component.title,
+                    modifier = Modifier.size(48.dp).clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
+            else if (titleLower.contains("интернет") || titleLower.contains("iot")) {
+                androidx.compose.foundation.Image(
+                    painter = androidx.compose.ui.res.painterResource(id = R.drawable.iot),
+                    contentDescription = component.title,
+                    modifier = Modifier.size(48.dp).clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
+            else if (titleLower.contains("блокчейн") || titleLower.contains("blockchain")) {
+                androidx.compose.foundation.Image(
+                    painter = androidx.compose.ui.res.painterResource(id = R.drawable.blockchain),
                     contentDescription = component.title,
                     modifier = Modifier.size(48.dp).clip(RoundedCornerShape(12.dp)),
                     contentScale = ContentScale.Crop
