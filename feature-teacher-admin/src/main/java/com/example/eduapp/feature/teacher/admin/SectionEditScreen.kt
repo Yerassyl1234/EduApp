@@ -56,7 +56,6 @@ fun SectionEditScreen(
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            // === GRADIENT HEADER ===
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -214,8 +213,6 @@ fun SectionEditScreen(
             }
         }
     }
-
-    // === Жаңа подкатегория қосу диалогы ===
     if (showAddComponentDialog) {
         ComponentEditDialog(
             title = "Жаңа подкатегория қосу",
@@ -226,8 +223,6 @@ fun SectionEditScreen(
             }
         )
     }
-
-    // === Подкатегорияны жою диалогы ===
     showDeleteComponentDialog?.let { componentId ->
         AlertDialog(
             onDismissRequest = { showDeleteComponentDialog = null },
@@ -247,8 +242,6 @@ fun SectionEditScreen(
             }
         )
     }
-
-    // === Подкатегорияны өңдеу диалогы ===
     showEditComponentDialog?.let { component ->
         ComponentEditDialog(
             title = "Подкатегорияны өңдеу",
@@ -272,8 +265,6 @@ fun SectionEditScreen(
             }
         )
     }
-
-    // === Секция атауын өңдеу диалогы ===
     if (showEditTitleDialog) {
         var editedTitle by remember { mutableStateOf(uiState.category?.title ?: "") }
         AlertDialog(

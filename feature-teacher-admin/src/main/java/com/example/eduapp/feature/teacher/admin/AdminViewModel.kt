@@ -54,13 +54,12 @@ class AdminViewModel @Inject constructor(
     fun publishResult(resultId: String) {
         viewModelScope.launch {
             resultsRepository.publishResult(resultId)
-            loadData() // Перезагрузить список
+            loadData()
         }
     }
 
     fun deleteTest(testId: String) {
         viewModelScope.launch {
-            // Optimistic: remove immediately
             _uiState.value = _uiState.value.copy(
                 tests = _uiState.value.tests.filter { it.id != testId }
             )

@@ -39,7 +39,6 @@ fun StudentsListScreen(
             .fillMaxSize()
             .background(Color(0xFFF0F4F3))
     ) {
-        // === GRADIENT HEADER ===
         Box(
             modifier = Modifier
                 .fillMaxWidth()

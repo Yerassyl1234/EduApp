@@ -82,7 +82,6 @@ fun ProfileScreen(
             .fillMaxSize()
             .background(Color(0xFFF0F4F3))
     ) {
-        // === GRADIENT HEADER WITH AVATAR ===
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -96,7 +95,6 @@ fun ProfileScreen(
             contentAlignment = Alignment.Center
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                // Avatar
                 Box(
                     modifier = Modifier
                         .size(90.dp)
@@ -156,8 +154,6 @@ fun ProfileScreen(
                 }
             }
         }
-
-        // === MENU ITEMS ===
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -209,8 +205,6 @@ fun ProfileScreen(
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
-
-    // === Баптаулар диалог ===
     if (showSettingsDialog) {
         ModalBottomSheet(
             onDismissRequest = { showSettingsDialog = false },
@@ -275,8 +269,6 @@ fun ProfileScreen(
             }
         }
     }
-
-    // === Жетістіктер диалог ===
     if (showAchievementsDialog && user?.role!="teacher") {
         ModalBottomSheet(
             onDismissRequest = { showAchievementsDialog = false },
@@ -297,8 +289,6 @@ fun ProfileScreen(
             }
         }
     }
-
-    // === Көмек / Хабарламалар диалог ===
     if (showHelpDialog) {
         ModalBottomSheet(
             onDismissRequest = { showHelpDialog = false },

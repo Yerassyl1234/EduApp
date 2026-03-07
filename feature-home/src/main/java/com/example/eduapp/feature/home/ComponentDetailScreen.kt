@@ -21,6 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import androidx.compose.foundation.Image
+import androidx.compose.ui.res.painterResource
 
 private val GradientColors = listOf(
     Color(0xFF26A69A),
@@ -43,7 +45,6 @@ fun ComponentDetailScreen(
             .fillMaxSize()
             .background(Color(0xFFF0F4F3))
     ) {
-        // === GRADIENT HEADER — только тайтл, без описания ===
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -89,7 +90,31 @@ fun ComponentDetailScreen(
 
         val comp = component ?: return
 
-        // === Scrollable content — всё последовательно ===
+        val localImageRes = when (comp.categoryId) {
+            "cat_princip" -> R.drawable.principals
+            "cat_architecture" -> R.drawable.stages
+            else -> when (comp.id) {
+                "comp_juyelik_blok" -> R.drawable.detail_system
+                "comp_processor" -> R.drawable.detail_processor
+                "comp_analyk_plata" -> R.drawable.detail_motherboard
+                "comp_kuat_kozi" -> R.drawable.detail_power_block
+                "comp_salkyndatu" -> R.drawable.detail_cooler
+                
+                "comp_keyboard" -> R.drawable.detail_keyboard
+                "comp_mouse" -> R.drawable.detail_mouse
+                "comp_microphone" -> R.drawable.detail_micro
+                
+                "comp_monitor" -> R.drawable.detail_monitor
+                "comp_printer" -> R.drawable.detail_printer
+                "comp_speaker" -> R.drawable.detail_colons
+                "comp_projector" -> R.drawable.detail_projector
+                
+                // Note: Camera is detail_camera.png, but webcam is comp_webcam
+                "comp_webcam" -> R.drawable.detail_camera
+                else -> null
+            }
+        }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -107,9 +132,44 @@ fun ComponentDetailScreen(
                     contentScale = ContentScale.Crop
                 )
                 Spacer(modifier = Modifier.height(16.dp))
+            } else if (comp.id == "comp_jady") {
+                // Special case for RAM (two images side by side)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.detail_in_ram),
+                        contentDescription = "Ішкі жады",
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(160.dp)
+                            .clip(RoundedCornerShape(16.dp)),
+                        contentScale = ContentScale.Fit
+                    )
+                    Image(
+                        painter = painterResource(id = R.drawable.detail_out_ram),
+                        contentDescription = "Сыртқы жады",
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(160.dp)
+                            .clip(RoundedCornerShape(16.dp)),
+                        contentScale = ContentScale.Fit
+                    )
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+            } else if (localImageRes != null) {
+                Image(
+                    painter = painterResource(id = localImageRes),
+                    contentDescription = comp.title,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(240.dp)
+                        .clip(RoundedCornerShape(16.dp)),
+                    contentScale = ContentScale.Fit
+                )
+                Spacer(modifier = Modifier.height(16.dp))
             }
-
-            // === Ақпарат ===
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
@@ -127,8 +187,6 @@ fun ComponentDetailScreen(
                     Text(text = comp.description, fontSize = 15.sp, lineHeight = 22.sp)
                 }
             }
-
-            // === Құрамы ===
             if (comp.composition.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(12.dp))
                 Card(
@@ -164,8 +222,6 @@ fun ComponentDetailScreen(
                     }
                 }
             }
-
-            // === Қызметі ===
             if (comp.function.isNotBlank()) {
                 Spacer(modifier = Modifier.height(12.dp))
                 Card(
@@ -186,8 +242,6 @@ fun ComponentDetailScreen(
                     }
                 }
             }
-
-            // === AR КНОПКА — после всех секций, внутри scroll ===
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(

@@ -22,6 +22,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import coil.compose.AsyncImage
 import com.example.eduapp.core.domain.model.Category
+import com.example.eduapp.feature.home.R
+import androidx.compose.foundation.Image
+import androidx.compose.ui.res.painterResource
 
 private val GradientColors = listOf(
     Color(0xFF26A69A),
@@ -54,7 +57,6 @@ fun HomeScreen(
             .background(Color(0xFFF0F4F3)),
         contentPadding = PaddingValues(bottom = 16.dp)
     ) {
-        // === GRADIENT HEADER ===
         item {
             Box(
                 modifier = Modifier
@@ -90,18 +92,14 @@ fun HomeScreen(
             }
         }
 
-        // === Spacing ===
         item { Spacer(modifier = Modifier.height(16.dp)) }
 
-        // Список категорий
         items(uiState.categories, key = { it.id }) { category ->
             CategoryCard(
                 category = category,
                 onClick = { onCategoryClick(category.id) }
             )
         }
-
-        // Если пусто
         if (uiState.categories.isEmpty()) {
             item {
                 Text(
@@ -135,9 +133,27 @@ fun CategoryCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Icon badge
+            val localIconRes = when (category.id) {
+                "cat_negizgi" -> R.drawable.comp_main
+                "cat_engizu" -> R.drawable.input
+                "cat_shygaru" -> R.drawable.output
+                "cat_princip" -> R.drawable.comp_principals
+                "cat_architecture" -> R.drawable.modern_arch
+                else -> null
+            }
+
             if (category.imageUrl.isNotBlank()) {
                 AsyncImage(
                     model = category.imageUrl,
+                    contentDescription = category.title,
+                    modifier = Modifier
+                        .size(52.dp)
+                        .clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            } else if (localIconRes != null) {
+                Image(
+                    painter = painterResource(id = localIconRes),
                     contentDescription = category.title,
                     modifier = Modifier
                         .size(52.dp)

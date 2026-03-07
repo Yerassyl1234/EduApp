@@ -61,7 +61,6 @@ class ProfileViewModel @Inject constructor(
 
             val photoUri = user?.photoUrl?.takeIf { it.isNotBlank() }?.let { Uri.parse(it) }
 
-            // Учитель — загружаем сообщения учеников
             val helpRequests = if (user?.role == "teacher") {
                 authRepository.getHelpRequests().getOrNull() ?: emptyList()
             } else {

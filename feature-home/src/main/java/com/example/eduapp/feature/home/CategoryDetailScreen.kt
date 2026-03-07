@@ -44,7 +44,6 @@ fun CategoryDetailScreen(
             .fillMaxSize()
             .background(Color(0xFFF0F4F3))
     ) {
-        // === GRADIENT HEADER ===
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -123,7 +122,6 @@ fun ComponentListItem(
                 .padding(14.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Icon badge
             val titleLower = component.title.lowercase()
             val titleUpper=component.title.uppercase()
             if (titleLower.contains("ram") || titleLower.contains("жады") || titleLower.contains("память")) {
@@ -174,13 +172,85 @@ fun ComponentListItem(
                     contentScale = ContentScale.Crop
                 )
             }
-            else if (titleLower.contains("Қуат") || titleLower.contains("көзі") || titleLower.contains("system")) {
+            else if (titleLower.contains("қаут") || titleLower.contains("қуат") || titleLower.contains("көзі")) {
                 androidx.compose.foundation.Image(
                     painter = androidx.compose.ui.res.painterResource(id = R.drawable.power_block),
                     contentDescription = component.title,
                     modifier = Modifier
                         .size(48.dp)
                         .clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
+            else if (titleLower.contains("пернетақта") || titleLower.contains("keyboard")) {
+                androidx.compose.foundation.Image(
+                    painter = androidx.compose.ui.res.painterResource(id = R.drawable.keyboard),
+                    contentDescription = component.title,
+                    modifier = Modifier.size(48.dp).clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
+            else if (titleLower.contains("тышқан") || titleLower.contains("mouse")) {
+                androidx.compose.foundation.Image(
+                    painter = androidx.compose.ui.res.painterResource(id = R.drawable.mouse),
+                    contentDescription = component.title,
+                    modifier = Modifier.size(48.dp).clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
+            else if (titleLower.contains("микрофон") || titleLower.contains("microphone")) {
+                androidx.compose.foundation.Image(
+                    painter = androidx.compose.ui.res.painterResource(id = R.drawable.microphone),
+                    contentDescription = component.title,
+                    modifier = Modifier.size(48.dp).clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
+            else if (titleLower.contains("камера") || titleLower.contains("webcam")) {
+                androidx.compose.foundation.Image(
+                    painter = androidx.compose.ui.res.painterResource(id = R.drawable.webcam),
+                    contentDescription = component.title,
+                    modifier = Modifier.size(48.dp).clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
+            else if (titleLower.contains("монитор") || titleLower.contains("monitor")) {
+                androidx.compose.foundation.Image(
+                    painter = androidx.compose.ui.res.painterResource(id = R.drawable.monitor),
+                    contentDescription = component.title,
+                    modifier = Modifier.size(48.dp).clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
+            else if (titleLower.contains("принтер") || titleLower.contains("printer")) {
+                androidx.compose.foundation.Image(
+                    painter = androidx.compose.ui.res.painterResource(id = R.drawable.printer),
+                    contentDescription = component.title,
+                    modifier = Modifier.size(48.dp).clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
+            else if (titleLower.contains("колонка") || titleLower.contains("speaker")) {
+                androidx.compose.foundation.Image(
+                    painter = androidx.compose.ui.res.painterResource(id = R.drawable.kolonka),
+                    contentDescription = component.title,
+                    modifier = Modifier.size(48.dp).clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
+            else if (titleLower.contains("енгізу") || titleLower.contains("input")) {
+                androidx.compose.foundation.Image(
+                    painter = androidx.compose.ui.res.painterResource(id = R.drawable.input),
+                    contentDescription = component.title,
+                    modifier = Modifier.size(48.dp).clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
+            else if (titleLower.contains("шығару") || titleLower.contains("output")) {
+                androidx.compose.foundation.Image(
+                    painter = androidx.compose.ui.res.painterResource(id = R.drawable.output),
+                    contentDescription = component.title,
+                    modifier = Modifier.size(48.dp).clip(RoundedCornerShape(12.dp)),
                     contentScale = ContentScale.Crop
                 )
             }

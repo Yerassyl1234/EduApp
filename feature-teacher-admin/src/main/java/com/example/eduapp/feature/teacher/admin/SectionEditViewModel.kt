@@ -59,7 +59,6 @@ class SectionEditViewModel @Inject constructor(
                 composition = composition,
                 function = function
             )
-            // Optimistic: show immediately
             _uiState.value = _uiState.value.copy(
                 components = _uiState.value.components + component
             )
@@ -70,7 +69,6 @@ class SectionEditViewModel @Inject constructor(
 
     fun deleteComponent(componentId: String) {
         viewModelScope.launch {
-            // Optimistic: remove immediately
             _uiState.value = _uiState.value.copy(
                 components = _uiState.value.components.filter { it.id != componentId }
             )
@@ -81,7 +79,6 @@ class SectionEditViewModel @Inject constructor(
 
     fun updateComponent(component: Component) {
         viewModelScope.launch {
-            // Optimistic: update immediately
             _uiState.value = _uiState.value.copy(
                 components = _uiState.value.components.map {
                     if (it.id == component.id) component else it
@@ -95,7 +92,6 @@ class SectionEditViewModel @Inject constructor(
     fun updateSectionTitle(newTitle: String) {
         viewModelScope.launch {
             val category = _uiState.value.category ?: return@launch
-            // Optimistic: update title immediately
             _uiState.value = _uiState.value.copy(
                 category = category.copy(title = newTitle)
             )

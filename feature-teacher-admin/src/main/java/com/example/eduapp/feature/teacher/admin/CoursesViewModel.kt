@@ -48,7 +48,6 @@ class CoursesViewModel @Inject constructor(
                 title = title,
                 order = maxOrder + 1
             )
-            // Optimistic: show immediately
             _uiState.value = _uiState.value.copy(
                 categories = _uiState.value.categories + tempCategory
             )
@@ -59,7 +58,6 @@ class CoursesViewModel @Inject constructor(
 
     fun deleteCategory(categoryId: String) {
         viewModelScope.launch {
-            // Optimistic: remove immediately
             _uiState.value = _uiState.value.copy(
                 categories = _uiState.value.categories.filter { it.id != categoryId }
             )
@@ -71,7 +69,6 @@ class CoursesViewModel @Inject constructor(
     fun updateCategoryTitle(categoryId: String, newTitle: String) {
         viewModelScope.launch {
             val category = _uiState.value.categories.find { it.id == categoryId } ?: return@launch
-            // Optimistic: update title immediately
             _uiState.value = _uiState.value.copy(
                 categories = _uiState.value.categories.map {
                     if (it.id == categoryId) it.copy(title = newTitle) else it
@@ -84,7 +81,6 @@ class CoursesViewModel @Inject constructor(
 
     fun publishCategory(categoryId: String) {
         viewModelScope.launch {
-            // Optimistic: mark as published immediately
             _uiState.value = _uiState.value.copy(
                 categories = _uiState.value.categories.map {
                     if (it.id == categoryId) it.copy(published = true) else it

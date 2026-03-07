@@ -39,8 +39,8 @@ private val EduColorScheme = lightColorScheme(
 
 @Composable
 fun EduAppTheme(
-    darkTheme: Boolean = false, // always light — matches reference
-    dynamicColor: Boolean = false, // disable dynamic color
+    darkTheme: Boolean = false,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = EduColorScheme

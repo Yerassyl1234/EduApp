@@ -35,8 +35,6 @@ class TestsRepository @Inject constructor(
             Result.failure(e)
         }
     }
-
-    // Для учителя — создание теста
     suspend fun createTest(test: Test): Result<String> {
         return try {
             val docRef = firestore.collection("tests").add(test).await()
@@ -45,8 +43,6 @@ class TestsRepository @Inject constructor(
             Result.failure(e)
         }
     }
-
-    // Для учителя — добавление вопроса
     suspend fun addQuestion(question: Question): Result<String> {
         return try {
             val docRef = firestore.collection("questions").add(question).await()
@@ -55,12 +51,9 @@ class TestsRepository @Inject constructor(
             Result.failure(e)
         }
     }
-
-    // Для учителя — удаление теста
     suspend fun deleteTest(testId: String): Result<Unit> {
         return try {
             firestore.collection("tests").document(testId).delete().await()
-            // Удаляем и вопросы этого теста
             val questions = firestore.collection("questions")
                 .whereEqualTo("testId", testId).get().await()
             for (doc in questions.documents) {

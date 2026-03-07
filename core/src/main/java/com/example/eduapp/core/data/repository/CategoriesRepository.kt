@@ -92,12 +92,10 @@ class CategoriesRepository @Inject constructor(
 
     suspend fun deleteCategory(categoryId: String): Result<Unit> {
         return try {
-            // Алдымен осы категорияның барлық компоненттерін жою
             val components = firestore.collection("components")
                 .whereEqualTo("categoryId", categoryId)
                 .get().await()
             components.documents.forEach { it.reference.delete().await() }
-            // Содан кейін категорияны жою
             firestore.collection("categories").document(categoryId).delete().await()
             Result.success(Unit)
         } catch (e: Exception) {

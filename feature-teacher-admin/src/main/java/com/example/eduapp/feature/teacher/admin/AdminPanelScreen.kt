@@ -50,7 +50,6 @@ fun AdminPanelScreen(
             .background(Color(0xFFF0F4F3)),
         contentPadding = PaddingValues(bottom = 16.dp)
     ) {
-        // === GRADIENT HEADER ===
         item {
             Box(
                 modifier = Modifier
@@ -116,8 +115,6 @@ fun AdminPanelScreen(
 
 
     }
-
-    // === Тесттер тізімі BottomSheet ===
     if (showTestListSheet) {
         ModalBottomSheet(
             onDismissRequest = { showTestListSheet = false },

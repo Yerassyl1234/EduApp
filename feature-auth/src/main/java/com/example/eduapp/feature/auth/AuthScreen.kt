@@ -44,7 +44,6 @@ fun AuthScreen(
             .fillMaxSize()
             .background(Color(0xFFF0F4F3))
     ) {
-        // === GRADIENT HEADER ===
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -74,8 +73,6 @@ fun AuthScreen(
                 )
             }
         }
-
-        // === FORM CARD — fixed offset, same position for both modes ===
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -112,8 +109,6 @@ fun AuthScreen(
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                     }
-
-                    // Email
                     OutlinedTextField(
                         value = uiState.email,
                         onValueChange = viewModel::onEmailChange,
@@ -130,7 +125,6 @@ fun AuthScreen(
 
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    // Пароль
                     OutlinedTextField(
                         value = uiState.password,
                         onValueChange = viewModel::onPasswordChange,
@@ -146,7 +140,6 @@ fun AuthScreen(
                         )
                     )
 
-                    // Выбор роли (только при регистрации)
                     if (!uiState.isLoginMode) {
                         Spacer(modifier = Modifier.height(16.dp))
 
@@ -189,7 +182,6 @@ fun AuthScreen(
 
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    // Ошибка
                     if (uiState.error != null) {
                         Card(
                             colors = CardDefaults.cardColors(containerColor = Color(0xFFFFEBEE)),
@@ -206,7 +198,6 @@ fun AuthScreen(
                         Spacer(modifier = Modifier.height(12.dp))
                     }
 
-                    // Кнопка входа/регистрации
                     Button(
                         onClick = viewModel::submit,
                         modifier = Modifier
@@ -236,7 +227,6 @@ fun AuthScreen(
 
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    // Переключение вход/регистрация
                     TextButton(onClick = viewModel::toggleMode) {
                         Text(
                             text = if (uiState.isLoginMode)

@@ -46,7 +46,6 @@ fun CreateTestScreen(
             .fillMaxSize()
             .background(Color(0xFFF0F4F3))
     ) {
-        // === GRADIENT HEADER ===
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -77,7 +76,6 @@ fun CreateTestScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // ===== Тест атауы =====
             OutlinedTextField(
                 value = uiState.testTitle,
                 onValueChange = viewModel::onTitleChange,
@@ -108,7 +106,6 @@ fun CreateTestScreen(
 
             HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp), color = Color(0xFFDAE5E3))
 
-            // ===== Навигация по вопросам =====
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(14.dp),
@@ -141,8 +138,6 @@ fun CreateTestScreen(
                     }
                 }
             }
-
-            // ===== Кнопки: добавить + удалить =====
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -174,7 +169,6 @@ fun CreateTestScreen(
 
             HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp), color = Color(0xFFDAE5E3))
 
-            // ===== Текущий вопрос =====
             val currentQuestion = uiState.questions[uiState.currentQuestionIndex]
 
             OutlinedTextField(
@@ -199,8 +193,6 @@ fun CreateTestScreen(
                 fontSize = 14.sp,
                 color = Color(0xFF004D40)
             )
-
-            // ===== Варианты ответов =====
             val labels = listOf("A", "B", "C", "D")
             currentQuestion.options.forEachIndexed { index, option ->
                 Row(
@@ -229,8 +221,6 @@ fun CreateTestScreen(
                     )
                 }
             }
-
-            // ===== Ошибка =====
             if (uiState.error != null) {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -252,8 +242,6 @@ fun CreateTestScreen(
                 fontSize = 14.sp,
                 color = Color(0xFF6B7B78)
             )
-
-            // ===== Кнопка сохранить =====
             Button(
                 onClick = viewModel::saveTest,
                 modifier = Modifier.fillMaxWidth().height(52.dp),

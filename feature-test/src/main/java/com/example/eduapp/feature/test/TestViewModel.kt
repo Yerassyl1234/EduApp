@@ -47,12 +47,8 @@ class TestViewModel @Inject constructor(
     private fun loadTest() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
-
-            // Загружаем инфо о тесте (название)
             val tests = testsRepository.getTests().getOrNull() ?: emptyList()
             val testInfo = tests.find { it.id == testId }
-
-            // Загружаем вопросы
             testsRepository.getQuestions(testId).onSuccess { questions ->
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,

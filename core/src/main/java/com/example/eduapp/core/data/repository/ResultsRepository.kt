@@ -20,7 +20,6 @@ class ResultsRepository @Inject constructor(
         }
     }
 
-    // Учитель публикует результат ученику
     suspend fun publishResult(resultId: String): Result<Unit> {
         return try {
             firestore.collection("results").document(resultId)
@@ -30,8 +29,6 @@ class ResultsRepository @Inject constructor(
             Result.failure(e)
         }
     }
-
-    // Для ученика — только опубликованные результаты
     suspend fun getPublishedResultsForUser(userId: String): Result<List<TestResult>> {
         return try {
             val snapshot = firestore.collection("results")
@@ -46,8 +43,6 @@ class ResultsRepository @Inject constructor(
             Result.failure(e)
         }
     }
-
-    // Для учителя — все результаты
     suspend fun getAllResults(): Result<List<TestResult>> {
         return try {
             val snapshot = firestore.collection("results")

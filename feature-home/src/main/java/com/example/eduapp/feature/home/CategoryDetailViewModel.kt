@@ -33,19 +33,16 @@ class CategoryDetailViewModel @Inject constructor(
     }
 
     private fun loadData() {
-        // Алдымен ContentData-дан тексеру (5 тұрақты секция)
         val localComponents = ContentData.getComponentsForCategory(categoryId)
         val fixedTitle = HomeViewModel.FIXED_CATEGORIES.find { it.id == categoryId }?.title
 
         if (localComponents.isNotEmpty()) {
-            // Бұл 5 тұрақты секцияның бірі — ContentData қолдану
             _uiState.value = CategoryDetailUiState(
                 isLoading = false,
                 categoryTitle = fixedTitle ?: "",
                 components = localComponents
             )
         } else {
-            // Бұл мұғалім қосқан курс — Firebase-тен жүктеу
             viewModelScope.launch {
                 _uiState.value = _uiState.value.copy(isLoading = true)
                 val firebaseComponents = categoriesRepository.getComponents(categoryId).getOrNull() ?: emptyList()

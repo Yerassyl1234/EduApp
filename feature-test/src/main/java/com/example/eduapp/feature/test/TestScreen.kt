@@ -35,7 +35,6 @@ fun TestScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    // Если тест завершён — показываем экран завершения
     if (uiState.isFinished) {
         TestCompletedScreen(
             isSaving = uiState.isSaving,
@@ -49,7 +48,6 @@ fun TestScreen(
             .fillMaxSize()
             .background(Color(0xFFF0F4F3))
     ) {
-        // === GRADIENT HEADER ===
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -87,8 +85,6 @@ fun TestScreen(
                         color = Color.White
                     )
                 }
-
-                // Progress bar in header
                 if (uiState.questions.isNotEmpty()) {
                     LinearProgressIndicator(
                         progress = {
@@ -132,7 +128,6 @@ fun TestScreen(
         ) {
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Вопрос
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
@@ -150,7 +145,6 @@ fun TestScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Варианты ответов
             val labels = listOf("A", "B", "C", "D")
             question.options.forEachIndexed { index, option ->
                 val isSelected = selectedAnswer == index
@@ -198,7 +192,6 @@ fun TestScreen(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            // Кнопки навигации
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween

@@ -30,13 +30,11 @@ class ComponentDetailViewModel @Inject constructor(
     }
 
     private fun loadComponent() {
-        // Алдымен ContentData-дан тексеру (5 тұрақты секция)
         val local = ContentData.getComponentById(componentId)
         if (local != null) {
             _component.value = local
             _isLoading.value = false
         } else {
-            // Firebase-тен жүктеу (мұғалім қосқан курс)
             viewModelScope.launch {
                 _isLoading.value = true
                 val result = categoriesRepository.getComponent(componentId)

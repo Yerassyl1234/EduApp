@@ -6,8 +6,6 @@ import com.example.eduapp.core.domain.model.Component
 object ContentData {
 
     val componentsByCategory: Map<String, List<Component>> = mapOf(
-
-        // ===== 1. Компьютердің негізгі құрылғылары =====
         "cat_negizgi" to listOf(
             Component(
                 id = "comp_juyelik_blok",
@@ -42,7 +40,7 @@ object ContentData {
                 id = "comp_jady",
                 categoryId = "cat_negizgi",
                 title = "Компьютер жады\n(ішкі/Сыртқы)",
-                description = "Компьютер жады деректерді сақтау үшін қолданылады. Ішкі жад (RAM, ROM) – уақытша және тұрақты деректерді сақтайды. Сыртқы жад (HDD, SSD, USB) – ұзақ мерзімді сақтау.",
+                description = "Компьютер жады деректерді сақтау үшін қолданылады. Ішкі жады (RAM, ROM) – уақытша және тұрақты деректерді сақтайды. Сыртқы жады (HDD, SSD, USB) – ұзақ мерзімді сақтау.",
                 composition = listOf(
                     "Жедел жады (RAM) – уақытша сақтау",
                     "Тұрақты жады (ROM) – жүйелік деректер",
@@ -99,8 +97,6 @@ object ContentData {
                 modelFileName = "models/cooler.glb"
             )
         ),
-
-        // ===== 2. Енгізу құрылғылары =====
         "cat_engizu" to listOf(
             Component(
                 id = "comp_keyboard",
@@ -139,8 +135,6 @@ object ContentData {
                 modelFileName = "models/webcam.glb"
             )
         ),
-
-        // ===== 3. Шығару құрылғылары =====
         "cat_shygaru" to listOf(
             Component(
                 id = "comp_monitor",
@@ -179,8 +173,6 @@ object ContentData {
                 modelFileName = "models/GPU.glb"
             )
         ),
-
-        // ===== 4. Компьютердің жұмыс істеу принципі =====
         "cat_princip" to listOf(
             Component(
                 id = "comp_input_process",
@@ -219,8 +211,6 @@ object ContentData {
                 modelFileName = "models/hdd.glb"
             )
         ),
-
-        // ===== 5. Қазіргі заманның архитектуралық шешімдері =====
         "cat_architecture" to listOf(
             Component(
                 id = "comp_cloud",

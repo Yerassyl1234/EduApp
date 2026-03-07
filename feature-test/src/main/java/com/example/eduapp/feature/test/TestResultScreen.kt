@@ -43,7 +43,6 @@ fun TestResultScreen(
                 modifier = Modifier.padding(32.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Trophy icon
                 Surface(
                     modifier = Modifier.size(80.dp),
                     shape = RoundedCornerShape(20.dp),
@@ -84,7 +83,6 @@ fun TestResultScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Score display
                 Text(
                     text = "${percentage}%",
                     fontSize = 52.sp,

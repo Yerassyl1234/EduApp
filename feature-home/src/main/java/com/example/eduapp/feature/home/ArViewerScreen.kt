@@ -63,7 +63,6 @@ fun ArViewerScreen(
 ) {
     val context = LocalContext.current
 
-    // "none" означает что модель файлы жоқ (Firebase курстар үшін)
     val actualModelFileName = if (modelFileName == "none") "" else modelFileName
 
     var hasCameraPermission by remember {
@@ -167,7 +166,6 @@ fun ArViewerScreen(
         return
     }
 
-    // AR Scene
     ArSceneContent(
         componentTitle = componentTitle,
         modelFileName = actualModelFileName,
@@ -245,13 +243,11 @@ private fun ArSceneContent(
             )
         )
 
-        // UI overlay
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .systemBarsPadding()
         ) {
-            // Top bar
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -288,7 +284,6 @@ private fun ArSceneContent(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            // Bottom instruction + exit button
             Column(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)

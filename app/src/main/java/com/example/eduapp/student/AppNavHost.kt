@@ -19,7 +19,6 @@ fun AppNavHost(authRepository: AuthRepository) {
 
     NavHost(navController = navController, startDestination = SPLASH_ROUTE) {
 
-        // === SPLASH SCREEN ===
         composable(SPLASH_ROUTE) {
             SplashScreen(
                 authRepository = authRepository,
@@ -36,7 +35,6 @@ fun AppNavHost(authRepository: AuthRepository) {
             )
         }
 
-        // === AUTH ===
         authScreen(
             onAuthSuccess = {
                 navController.navigate("main") {
@@ -45,7 +43,6 @@ fun AppNavHost(authRepository: AuthRepository) {
             }
         )
 
-        // === MAIN ===
         composable("main") {
             MainScreen(
                 onSignOut = {
@@ -81,7 +78,6 @@ fun AppNavHost(authRepository: AuthRepository) {
             onArClick = { id, title, modelFileName -> navController.navigateToArViewer(id, title, modelFileName) }
         )
 
-        // AR экран
         arViewerScreen(onBackClick = { navController.popBackStack() })
 
         testScreen(

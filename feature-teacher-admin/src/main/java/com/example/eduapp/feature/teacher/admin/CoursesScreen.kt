@@ -57,7 +57,6 @@ fun CoursesScreen(
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            // === GRADIENT HEADER ===
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -154,7 +153,6 @@ fun CoursesScreen(
                             Spacer(modifier = Modifier.height(8.dp))
 
                             if (category.published) {
-                                // Уже опубликовано
                                 Surface(
                                     modifier = Modifier.fillMaxWidth().height(42.dp),
                                     shape = RoundedCornerShape(12.dp),
@@ -174,7 +172,6 @@ fun CoursesScreen(
                                     }
                                 }
                             } else {
-                                // Кнопка опубликовать
                                 Button(
                                     onClick = { viewModel.publishCategory(category.id) },
                                     modifier = Modifier.fillMaxWidth().height(42.dp),
@@ -192,8 +189,6 @@ fun CoursesScreen(
             }
         }
     }
-
-    // === Жаңа секция қосу диалогы ===
     if (showAddDialog) {
         var newTitle by remember { mutableStateOf("") }
         AlertDialog(
@@ -230,8 +225,6 @@ fun CoursesScreen(
             }
         )
     }
-
-    // === Секцияны жою диалогы ===
     showDeleteDialog?.let { categoryId ->
         AlertDialog(
             onDismissRequest = { showDeleteDialog = null },
@@ -251,8 +244,6 @@ fun CoursesScreen(
             }
         )
     }
-
-    // === Секция атауын өңдеу диалогы ===
     showEditDialog?.let { (categoryId, currentTitle) ->
         var editedTitle by remember { mutableStateOf(currentTitle) }
         AlertDialog(

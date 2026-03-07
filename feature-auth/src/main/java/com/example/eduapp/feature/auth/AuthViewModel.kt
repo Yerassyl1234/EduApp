@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 data class AuthUiState(
     val isLoading: Boolean = false,
-    val isLoginMode: Boolean = true,  // true = вход, false = регистрация
+    val isLoginMode: Boolean = true,
     val name: String = "",
     val email: String = "",
     val password: String = "",
@@ -30,7 +30,6 @@ class AuthViewModel @Inject constructor(
     val uiState: StateFlow<AuthUiState> = _uiState
 
     init {
-        // Проверяем, вошёл ли пользователь ранее
         checkCurrentUser()
     }
 
@@ -40,7 +39,6 @@ class AuthViewModel @Inject constructor(
             if (user != null) {
                 _uiState.value = _uiState.value.copy(user = user)
             } else if (authRepository.currentUserId != null) {
-                // Сессия есть, но документ в Firestore удалён — разлогиниваем
                 authRepository.signOut()
             }
         }
