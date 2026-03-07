@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.example.eduapp.core.domain.model.ContentData
 
 data class CoursesUiState(
     val isLoading: Boolean = true,
@@ -32,9 +33,18 @@ class CoursesViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
             val result = categoriesRepository.getCategories()
+            
+            val firebaseCourses = result.getOrNull() ?: emptyList()
+            val firebaseMap = firebaseCourses.associateBy { it.id }
+            val mergedFixed = ContentData.FIXED_CATEGORIES.map { fixed ->
+                firebaseMap[fixed.id] ?: fixed
+            }
+            val fixedIds = ContentData.FIXED_CATEGORIES.map { it.id }.toSet()
+            val newFirebaseCourses = firebaseCourses.filter { it.id !in fixedIds }
+
             _uiState.value = CoursesUiState(
                 isLoading = false,
-                categories = result.getOrNull() ?: emptyList(),
+                categories = mergedFixed + newFirebaseCourses,
                 error = result.exceptionOrNull()?.message
             )
         }

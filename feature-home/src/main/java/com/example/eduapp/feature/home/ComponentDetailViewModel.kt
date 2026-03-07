@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.eduapp.core.data.repository.CategoriesRepository
 import com.example.eduapp.core.domain.model.Component
+import com.example.eduapp.core.domain.model.ContentData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -30,17 +31,16 @@ class ComponentDetailViewModel @Inject constructor(
     }
 
     private fun loadComponent() {
-        val local = ContentData.getComponentById(componentId)
-        if (local != null) {
-            _component.value = local
-            _isLoading.value = false
-        } else {
-            viewModelScope.launch {
-                _isLoading.value = true
-                val result = categoriesRepository.getComponent(componentId)
-                _component.value = result.getOrNull()
-                _isLoading.value = false
+        viewModelScope.launch {
+            _isLoading.value = true
+            val firebaseComponent = categoriesRepository.getComponent(componentId).getOrNull()
+            
+            if (firebaseComponent != null) {
+                _component.value = firebaseComponent
+            } else {
+                _component.value = ContentData.getComponentById(componentId)
             }
+            _isLoading.value = false
         }
     }
 }

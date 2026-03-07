@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.example.eduapp.core.domain.model.ContentData
 
 data class HomeUiState(
     val isLoading: Boolean = true,
@@ -25,40 +26,7 @@ class HomeViewModel @Inject constructor(
     private val categoriesRepository: CategoriesRepository
 ) : ViewModel() {
 
-    companion object {
-        val FIXED_CATEGORIES = listOf(
-            Category(
-                id = "cat_negizgi",
-                title = "Компьютердің негізгі құрылғылары",
-                imageUrl = "",
-                order = 1
-            ),
-            Category(
-                id = "cat_engizu",
-                title = "Енгізу құрылғылары",
-                imageUrl = "",
-                order = 2
-            ),
-            Category(
-                id = "cat_shygaru",
-                title = "Шығару құрылғылары",
-                imageUrl = "",
-                order = 3
-            ),
-            Category(
-                id = "cat_princip",
-                title = "Компьютердің жұмыс істеу принципі",
-                imageUrl = "",
-                order = 4
-            ),
-            Category(
-                id = "cat_architecture",
-                title = "Қазіргі заманның архитектуралық шешімдері",
-                imageUrl = "",
-                order = 5
-            )
-        )
-    }
+    // FIXED_CATEGORIES moved to ContentData in core module
 
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState
@@ -75,7 +43,15 @@ class HomeViewModel @Inject constructor(
             val user = authRepository.getCurrentUser()
             val firebaseCourses = categoriesRepository.getCategories().getOrNull()
                 ?.filter { it.published } ?: emptyList()
-            val allCategories = FIXED_CATEGORIES + firebaseCourses
+            
+            val firebaseMap = firebaseCourses.associateBy { it.id }
+            val mergedFixed = ContentData.FIXED_CATEGORIES.map { fixed ->
+                firebaseMap[fixed.id] ?: fixed
+            }
+            val fixedIds = ContentData.FIXED_CATEGORIES.map { it.id }.toSet()
+            val newFirebaseCourses = firebaseCourses.filter { it.id !in fixedIds }
+            
+            val allCategories = mergedFixed + newFirebaseCourses
 
             _uiState.value = HomeUiState(
                 isLoading = false,

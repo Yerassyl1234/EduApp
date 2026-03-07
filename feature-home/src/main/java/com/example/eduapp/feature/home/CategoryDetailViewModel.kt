@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.eduapp.core.data.repository.CategoriesRepository
 import com.example.eduapp.core.domain.model.Component
+import com.example.eduapp.core.domain.model.ContentData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -33,28 +34,31 @@ class CategoryDetailViewModel @Inject constructor(
     }
 
     private fun loadData() {
-        val localComponents = ContentData.getComponentsForCategory(categoryId)
-        val fixedTitle = HomeViewModel.FIXED_CATEGORIES.find { it.id == categoryId }?.title
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true)
+            
+            val categories = categoriesRepository.getCategories().getOrNull() ?: emptyList()
+            val firebaseCategory = categories.find { it.id == categoryId }
+            val fixedTitle = ContentData.FIXED_CATEGORIES.find { it.id == categoryId }?.title
+            val categoryTitle = firebaseCategory?.title ?: fixedTitle ?: ""
 
-        if (localComponents.isNotEmpty()) {
+            val firebaseComponents = categoriesRepository.getComponents(categoryId).getOrNull() ?: emptyList()
+            val localComponents = ContentData.getComponentsForCategory(categoryId)
+
+            val firebaseMap = firebaseComponents.associateBy { it.id }
+            val mergedFixed = localComponents.map { fixed ->
+                firebaseMap[fixed.id] ?: fixed
+            }
+            val localIds = localComponents.map { it.id }.toSet()
+            val newFirebaseComponents = firebaseComponents.filter { it.id !in localIds }
+            
+            val components = mergedFixed + newFirebaseComponents
+
             _uiState.value = CategoryDetailUiState(
                 isLoading = false,
-                categoryTitle = fixedTitle ?: "",
-                components = localComponents
+                categoryTitle = categoryTitle,
+                components = components
             )
-        } else {
-            viewModelScope.launch {
-                _uiState.value = _uiState.value.copy(isLoading = true)
-                val firebaseComponents = categoriesRepository.getComponents(categoryId).getOrNull() ?: emptyList()
-                val categories = categoriesRepository.getCategories().getOrNull() ?: emptyList()
-                val title = categories.find { it.id == categoryId }?.title ?: ""
-
-                _uiState.value = CategoryDetailUiState(
-                    isLoading = false,
-                    categoryTitle = title,
-                    components = firebaseComponents
-                )
-            }
         }
     }
 }

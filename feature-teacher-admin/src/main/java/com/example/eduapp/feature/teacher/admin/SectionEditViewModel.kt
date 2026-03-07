@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.example.eduapp.core.domain.model.ContentData
 
 data class SectionEditUiState(
     val isLoading: Boolean = true,
@@ -37,9 +38,25 @@ class SectionEditViewModel @Inject constructor(
     fun loadSection() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
+            
             val categories = categoriesRepository.getCategories().getOrNull() ?: emptyList()
-            val category = categories.find { it.id == sectionId }
-            val components = categoriesRepository.getComponents(sectionId).getOrNull() ?: emptyList()
+            var category = categories.find { it.id == sectionId }
+            if (category == null) {
+                category = ContentData.FIXED_CATEGORIES.find { it.id == sectionId }
+            }
+            
+            val firebaseComponents = categoriesRepository.getComponents(sectionId).getOrNull() ?: emptyList()
+            val localComponents = ContentData.getComponentsForCategory(sectionId)
+            
+            val firebaseMap = firebaseComponents.associateBy { it.id }
+            val mergedFixed = localComponents.map { fixed ->
+                firebaseMap[fixed.id] ?: fixed
+            }
+            val localIds = localComponents.map { it.id }.toSet()
+            val newFirebaseComponents = firebaseComponents.filter { it.id !in localIds }
+            
+            val components = mergedFixed + newFirebaseComponents
+
             _uiState.value = SectionEditUiState(
                 isLoading = false,
                 category = category,
